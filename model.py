@@ -40,7 +40,7 @@ print(dataset['Transaction_Amount'])
 numeric_columns = dataset.select_dtypes(include=np.number).columns
 correlation_matrix = dataset[numeric_columns].corr()
 # Setting a correlation threshold of 0.1
-correlation_threshold = 0.03
+correlation_threshold = 0.01
 # Selecting features with absolute correlation above the threshold
 selected_features = correlation_matrix[abs(correlation_matrix['Fraud_indicator']) > correlation_threshold].index
 # Keeping only the selected features in the dataset
