@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<title>FastTag Fraud Detector</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    form {
+        margin-top: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+    }
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    #prediction-result {
+        margin-top: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>FastTag Fraud Detector</h1>
+    <form id="fasttag-form">
+        <label for="Transaction-id">Transaction ID:</label>
+        <input type="text" id="Transaction-id" name="Transaction-id" required>
+        
+        <label for="Timestamp">Timestamp:</label>
+        <input type="text" id="Timestamp" name="Timestamp" required>
+        
+        <label for="Vehicle-type">Vehicle Type:</label>
+        <input type="text" id="Vehicle-type" name="Vehicle-type" required>
+        
+        <label for="Transaction_Amount">Transaction Amount:</label>
+        <input type="number" id="Transaction_Amount" name="Transaction_Amount" required>
+        
+        <label for="Amount_paid">Amount Paid:</label>
+        <input type="number" id="Amount_paid" name="Amount_paid" required>
+        
+        <label for="Geographical_Location">Geographical Location:</label>
+        <input type="text" id="Geographical_Location" name="Geographical_Location" required>
+        
+        <label for="Vehicle-speed">Vehicle Speed:</label>
+        <input type="number" id="Vehicle-speed" name="Vehicle-speed" required>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+    <div id="prediction-result"></div>
+</div>
+
+<script>
+    document.getElementById('fasttag-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        var formData = new FormData(this);
+        var jsonData = {};
+        
+        formData.forEach(function(value, key) {
+            jsonData[key] = value;
+        });
+        
+        // Send JSON data to backend for processing
+        fetch('/process_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(function(data) {
+            console.log(data);
+            // Display prediction result
+            document.getElementById('prediction-result').innerText = 'Prediction: ' + data.prediction;
+        })
+        .catch(function(error) {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+</script>
+
+</body>
+</html>
